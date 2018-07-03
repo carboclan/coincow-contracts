@@ -1,6 +1,7 @@
 # IDE Files
 .idea
 .vscode
+package-lock.json
 
 # Logs
 logs
