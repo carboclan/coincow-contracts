@@ -22,6 +22,12 @@ contract CoinCow721 is CoinCowAccessControl, ERC721 {
         return true;
     }
 
+    function getCow(uint256 tokenId) public view returns(address contractAddress, uint256 birthTime) {
+        Cow storage cow = cows[tokenId];
+        contractAddress = cow.contractAddress;
+        birthTime = cow.birthTime;
+    }
+
     function totalSupply() public view returns (uint256 total) {
         total = cows.length - 1;
     }
