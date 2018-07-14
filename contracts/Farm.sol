@@ -12,8 +12,8 @@ contract Farm is AccessControl {
         uint256 size;
     }
 
-    uint256 creationFee;
-    uint256 sizeLimit;
+    uint256 public creationFee;
+    uint256 public sizeLimit;
     mapping(address => uint256) public userToFarmId;
     mapping(bytes32 => uint256) public farmNameToId;
     FarmInfo[] farms;
@@ -42,6 +42,13 @@ contract Farm is AccessControl {
         farmNameToId[name] = farmId;
 
         emit Created(msg.sender, farmId, name);
+    }
+
+    function getInfo(uint256 farmId) public view returns (address owner, bytes32 name, uint256 size) {
+        FarmInfo storage farm = farms[farmId];
+        owner = farm.owner;
+        name = farm.name;
+        size = farm.size;
     }
 
     function join(uint256 farmId) public whenNotPaused {
