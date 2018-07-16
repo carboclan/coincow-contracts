@@ -63,9 +63,11 @@ contract AuctionHouse is AccessControl {
 
         uint256 auctioneerCut = _computeCut(auction.price);
         uint256 sellerProceeds = auction.price - auctioneerCut;
-        auction.seller.transfer(sellerProceeds);
 
+        auction.seller.transfer(sellerProceeds);
         nonFungibleContract.transfer(msg.sender, _tokenId);
+        delete tokenIdToAuction[_tokenId];
+
         emit AuctionSuccessful(_tokenId, auction.price, msg.sender);
     }
 
@@ -75,6 +77,8 @@ contract AuctionHouse is AccessControl {
         require(auction.seller == msg.sender);
 
         nonFungibleContract.transfer(msg.sender, _tokenId);
+        delete tokenIdToAuction[_tokenId];
+
         emit AuctionCancelled(_tokenId);
     }
 
