@@ -34,7 +34,7 @@ contract Farm is AccessControl {
 
     function create(bytes32 name) public payable whenNotPaused returns (uint256 farmId) {
         require(farmNameToId[name] == 0);
-        require(userToFarmId[msg.sender] == 0);
+        require(farms[userToFarmId[msg.sender]].owner != msg.sender);
         require(msg.value >= creationFee);
 
         farmId = farms.push(FarmInfo(msg.sender, name, 1)) - 1;
