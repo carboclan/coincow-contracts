@@ -28,13 +28,17 @@ contract Farm is AccessControl {
         creationFee = fee;
     }
 
+    function setSizeLimit(uint256 limit) public onlyCOO {
+        require(limit < 1024 * 1024);
+        sizeLimit = limit;
+    }
+
     function total() public view returns(uint256) {
         return farms.length - 1;
     }
 
-    function create(bytes32 name) public payable whenNotPaused returns (uint256 farmId) {
+    function create(bytes32 name) public payable whenNotPaused ownNothing returns (uint256 farmId) {
         require(farmNameToId[name] == 0);
-        require(farms[userToFarmId[msg.sender]].owner != msg.sender);
         require(msg.value >= creationFee);
 
         farmId = farms.push(FarmInfo(msg.sender, name, 1)) - 1;
@@ -51,18 +55,14 @@ contract Farm is AccessControl {
         size = farm.size;
     }
 
-    function join(uint256 farmId) public whenNotPaused {
+    function join(uint256 farmId) public whenNotPaused ownNothing {
         require(farmId > 0);
         require(farmId < farms.length);
 
-        uint256 orig = userToFarmId[msg.sender];
-        if (orig > 0) {
-            FarmInfo storage origFarm = farms[orig];
-            require(origFarm.owner != msg.sender);
-            origFarm.size--;
-        }
+        FarmInfo storage farm = farms[farmId];
+        require(farm.size < sizeLimit);
 
-        farms[farmId].size++;
+        farm.size++;
         userToFarmId[msg.sender] = farmId;
 
         emit Joined(msg.sender, farmId);
@@ -70,5 +70,10 @@ contract Farm is AccessControl {
 
     function withdrawBalance() public onlyCFO {
         address(nonFungibleContract).transfer(address(this).balance);
+    }
+
+    modifier ownNothing() {
+        require(farms[userToFarmId[msg.sender]].owner != msg.sender);
+        _;
     }
 }
