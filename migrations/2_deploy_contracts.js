@@ -7,6 +7,7 @@ const Farm = artifacts.require('./Farm.sol');
 const TestCow = artifacts.require('./cows/TestCow.sol');
 
 module.exports = async function(deployer) {
+  deployer.then(async () => {
     await deployer.deploy(UserInfo);
     const userInfo = await UserInfo.deployed();
 
@@ -29,8 +30,9 @@ module.exports = async function(deployer) {
     await coinCowCore.registerCowInterface(testBchCow.address);
     await coinCowCore.registerCowInterface(testEthCow.address);
     await coinCowCore.registerCowInterface(testLamaCow.address);
-
-    fs.writeFileSync(__dirname + '/../build/contract_addresses.json', JSON.stringify({
+    
+    try {
+      fs.writeFileSync(__dirname + '/../build/contract_addresses.json', JSON.stringify({
         userInfo: userInfo.address,
         coinCowCore: coinCowCore.address,
         auctionHouse: auctionHouse.address,
@@ -39,5 +41,9 @@ module.exports = async function(deployer) {
         testBchCow: testBchCow.address,
         testEthCow: testEthCow.address,
         testLamaCow: testLamaCow.address
-    }));
+      }));
+    } catch (e) {
+      
+    }
+  });
 };
