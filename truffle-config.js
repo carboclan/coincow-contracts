@@ -1,5 +1,5 @@
 const PrivateKeyProvider = require('truffle-privatekey-provider');
-const provider = process.env.PRI && new PrivateKeyProvider(process.env.PRI, 'https://ropsten.infura.io/8Q30zi3TAqlJ6JSCwcul');
+const provider = process.env.PRI && new PrivateKeyProvider(process.env.PRI, process.env.URL || 'https://ropsten.infura.io/8Q30zi3TAqlJ6JSCwcul');
 
 module.exports = {
     networks: {
