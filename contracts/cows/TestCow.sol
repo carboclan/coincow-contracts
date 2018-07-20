@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.21;
 
 import "../CoinCowCore.sol";
 import "./CowBase.sol";
@@ -9,7 +9,7 @@ contract TestCow is CowBase {
     string myContractType;
     string myContractUnit;
 
-    constructor(address coreAddress, address farmAddress, string name, string profitUnit, string contractType, string contractUnit) public CowBase(coreAddress, farmAddress) {
+    function TestCow(address coreAddress, address farmAddress, string name, string profitUnit, string contractType, string contractUnit) public CowBase(coreAddress, farmAddress) {
         myName = name;
         myProfitUnit = profitUnit;
         myContractType = contractType;

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.21;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
@@ -13,7 +13,7 @@ contract EmptyCowInterface is CowInterface {
 
     address nonFungibleContract;
 
-    constructor(address cowAddress) public {
+    function EmptyCowInterface(address cowAddress) public {
         nonFungibleContract = cowAddress;
     }
 

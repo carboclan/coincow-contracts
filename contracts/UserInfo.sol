@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.21;
 
 contract UserInfo {
     mapping(bytes32 => address) public addressOf;

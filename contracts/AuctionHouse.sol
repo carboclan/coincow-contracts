@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.21;
 
 import "./AccessControl.sol";
 
@@ -25,7 +25,7 @@ contract AuctionHouse is AccessControl {
     // Map from token ID to their corresponding auction.
     mapping (uint256 => Auction) tokenIdToAuction;
 
-    constructor(address core) public AccessControl(core) {
+    function AuctionHouse(address core) public AccessControl(core) {
 
     }
 

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.21;
 
 contract CoinCowAccessControl {
     // The addresses of the accounts (or contracts) that can execute actions within each roles.
