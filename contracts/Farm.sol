@@ -57,7 +57,13 @@ contract Farm is AccessControl {
 
     function join(uint256 farmId) public whenNotPaused ownNothing {
         require(farmId > 0);
+        require(farmId != userToFarmId[msg.sender]);
         require(farmId < farms.length);
+
+        uint256 oldFarmId = userToFarmId[msg.sender];
+        if (oldFarmId > 0) {
+            farms[oldFarmId].size--;
+        }
 
         FarmInfo storage farm = farms[farmId];
         require(farm.size < sizeLimit);
