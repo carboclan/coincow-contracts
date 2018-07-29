@@ -37,7 +37,7 @@ contract Farm is AccessControl {
         return farms.length - 1;
     }
 
-    function create(bytes32 name) public payable whenNotPaused ownNothing returns (uint256 farmId) {
+    function create(bytes32 name) public payable whenNotPaused ownNothing hasCow returns (uint256 farmId) {
         require(farmNameToId[name] == 0);
         require(msg.value >= creationFee);
 
@@ -55,7 +55,7 @@ contract Farm is AccessControl {
         size = farm.size;
     }
 
-    function join(uint256 farmId) public whenNotPaused ownNothing {
+    function join(uint256 farmId) public whenNotPaused ownNothing hasCow {
         require(farmId > 0);
         require(farmId != userToFarmId[msg.sender]);
         require(farmId < farms.length);
@@ -80,6 +80,11 @@ contract Farm is AccessControl {
 
     modifier ownNothing() {
         require(farms[userToFarmId[msg.sender]].owner != msg.sender);
+        _;
+    }
+
+    modifier hasCow() {
+        require(nonFungibleContract.balanceOf(msg.sender) > 0);
         _;
     }
 }
