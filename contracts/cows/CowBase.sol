@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity  ^0.4.24;
 
 import "../Farm.sol";
 import "./CowInterface.sol";
@@ -6,7 +6,7 @@ import "./CowInterface.sol";
 contract CowBase is CowInterface, AccessControl {
     Farm farm;
 
-    function CowBase(address coreAddress, address farmAddress) public AccessControl(coreAddress) {
+    constructor(address coreAddress, address farmAddress) public AccessControl(coreAddress) {
         farm = Farm(farmAddress);
     }
 

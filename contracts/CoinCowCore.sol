@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity  ^0.4.24;
 
 import "./CoinCow721.sol";
 import "./AuctionHouse.sol";
@@ -11,7 +11,7 @@ contract CoinCowCore is CoinCow721 {
 
     mapping(address => bool) registeredCowInterface;
 
-    function CoinCowCore() public {
+    constructor() public {
         ceoAddress = msg.sender;
         cooAddress = msg.sender;
     }

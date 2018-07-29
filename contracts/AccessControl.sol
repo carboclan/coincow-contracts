@@ -1,11 +1,11 @@
-pragma solidity 0.4.21;
+pragma solidity  ^0.4.24;
 
 import "./CoinCow721.sol";
 
 contract AccessControl {
     CoinCow721 nonFungibleContract;
 
-    function AccessControl(address core) public {
+    constructor(address core) public {
         nonFungibleContract = CoinCow721(core);
         require(nonFungibleContract.implementsERC721());
     }

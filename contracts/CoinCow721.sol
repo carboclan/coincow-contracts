@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity  ^0.4.24;
 
 import "./ERC721.sol";
 import "./CoinCowAccessControl.sol";
@@ -14,7 +14,7 @@ contract CoinCow721 is CoinCowAccessControl, ERC721 {
     mapping (address => uint256) ownershipTokenCount;
     mapping (uint256 => address) public cowIndexToApproved;
 
-    function CoinCow721() public {
+    constructor() public {
         cows.length = 1;
     }
 

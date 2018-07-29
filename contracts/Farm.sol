@@ -1,4 +1,4 @@
-pragma solidity 0.4.21;
+pragma solidity  ^0.4.24;
 
 import "./AccessControl.sol";
 
@@ -18,7 +18,7 @@ contract Farm is AccessControl {
     mapping(bytes32 => uint256) public farmNameToId;
     FarmInfo[] farms;
 
-    function Farm(address core) public AccessControl(core) {
+    constructor(address core) public AccessControl(core) {
         farms.length = 1;
         creationFee = 0.2 ether;
         sizeLimit = 100;
