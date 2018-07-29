@@ -1,5 +1,6 @@
 pragma solidity  ^0.4.24;
 
+import "./Farm.sol";
 import "./AccessControl.sol";
 
 contract AuctionHouse is AccessControl {
@@ -9,9 +10,10 @@ contract AuctionHouse is AccessControl {
         uint64 ts;
     }
 
+    event FarmOwnerReward(address owner, uint256 amount, uint256 tokenId, uint256 farmId, uint256 ts);
     event AuctionCreated(uint256 tokenId, uint256 price, uint256 ts);
-    event AuctionSuccessful(uint256 tokenId, uint256 totalPrice, address winner);
-    event AuctionCancelled(uint256 tokenId);
+    event AuctionSuccessful(uint256 tokenId, uint256 totalPrice, address winner, uint256 ts);
+    event AuctionCancelled(uint256 tokenId, uint256 ts);
 
     modifier canBeStoredWith128Bits(uint256 _value) {
         require(_value < 340282366920938463463374607431768211455);
@@ -21,12 +23,14 @@ contract AuctionHouse is AccessControl {
     // Cut owner takes on each auction, measured in basis points (1/100 of a percent).
     // Values 0-10,000 map to 0%-100%
     uint256 public ownerCut;
+    uint256 public farmCut;
+    Farm farm;
 
     // Map from token ID to their corresponding auction.
     mapping (uint256 => Auction) tokenIdToAuction;
 
-    constructor(address core) public AccessControl(core) {
-
+    constructor(address core, address farmAddress) public AccessControl(core) {
+        farm = Farm(farmAddress);
     }
 
     function isAuctionHouse() public pure returns (bool) {
@@ -39,6 +43,10 @@ contract AuctionHouse is AccessControl {
 
     function setOnwerCut(uint256 cut) public onlyCOO {
         ownerCut = cut;
+    }
+
+    function setFarmCut(uint256 cut) public onlyCOO {
+        farmCut = cut;
     }
 
     function getAuction(uint256 tokenId) public view returns(address seller, uint128 price, uint256 ts) {
@@ -62,13 +70,22 @@ contract AuctionHouse is AccessControl {
         require(msg.value >= auction.price);
 
         uint256 auctioneerCut = _computeCut(auction.price);
-        uint256 sellerProceeds = auction.price - auctioneerCut;
+        uint256 farmOwnerCut = _computeFarmCut(auction.price);
+        uint256 sellerProceeds = auction.price - auctioneerCut - farmOwnerCut;
+
+        if (farmOwnerCut > 0) {
+            uint256 farmId = farm.userToFarmId(auction.seller);
+            address owner;
+            (owner,,) = farm.getInfo(farmId);
+            owner.transfer(farmOwnerCut);
+            emit FarmOwnerReward(owner, farmOwnerCut, _tokenId, farmId, now);
+        }
 
         auction.seller.transfer(sellerProceeds);
         nonFungibleContract.transfer(msg.sender, _tokenId);
         delete tokenIdToAuction[_tokenId];
 
-        emit AuctionSuccessful(_tokenId, auction.price, msg.sender);
+        emit AuctionSuccessful(_tokenId, auction.price, msg.sender, now);
     }
 
     /// @dev Cancels an auction unconditionally.
@@ -79,7 +96,7 @@ contract AuctionHouse is AccessControl {
         nonFungibleContract.transfer(msg.sender, _tokenId);
         delete tokenIdToAuction[_tokenId];
 
-        emit AuctionCancelled(_tokenId);
+        emit AuctionCancelled(_tokenId, now);
     }
 
     function withdrawBalance() public onlyCFO {
@@ -94,5 +111,9 @@ contract AuctionHouse is AccessControl {
         //  currency (at 128-bits), and ownerCut <= 10000. The result of this
         //  function is always guaranteed to be <= _price.
         return _price * ownerCut / 10000;
+    }
+
+    function _computeFarmCut(uint256 _price) internal view returns (uint256) {
+        return _price * farmCut / 10000;
     }
 }
