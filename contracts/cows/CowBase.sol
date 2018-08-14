@@ -38,7 +38,14 @@ contract CowBase is CowInterface, AccessControl {
     function stealThreshold() public view returns (uint256);
     function withdrawThreshold() public view returns (uint256);
 
-    function milkAvailable(uint256 _tokenId) public view returns (uint256);
+    function computeProfit(uint256 _tokenId, uint256 duration, bool isEstimate) public view returns (uint256);
+
+    function milkAvailable(uint256 _tokenId) public view returns (uint256) {
+        Cow storage cow = cowIdToCow[_tokenId];
+
+        uint256 dur = now - cow.lastMilkTime;
+        return computeProfit(_tokenId, dur, false) - cow.lastStolen;
+    }
 
     function milk(uint256 _tokenId) public {
         Cow storage cow = cowIdToCow[_tokenId];
