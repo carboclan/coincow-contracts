@@ -47,7 +47,7 @@ contract('TestAll', async accounts => {
         before(deploy);
 
         it('should work as expected', async function () {
-            await btcSwapCow.createCow(14000, 7 * 24 * 3600);
+            await btcSwapCow.createCow(14000, 7);
             const tokenId = await coinCowCore.totalSupply();
             assert.equal(tokenId, 1);
             assert.equal(await coinCowCore.ownerOf(tokenId), accounts[0]);
