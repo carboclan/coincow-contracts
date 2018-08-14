@@ -24,6 +24,9 @@ contract('TestAll', async accounts => {
         btcSwapCow = await BtcSwapCow.new(coinCowCore.address, farm.address);
         ethSwapCow = await EthSwapCow.new(coinCowCore.address, farm.address);
 
+        await ethSwapCow.setData(283675708561669, 14592636);
+        await btcSwapCow.setData(6389316883511, 12.5 * 1e18);
+
         await coinCowCore.registerCowInterface(btcSwapCow.address);
         await coinCowCore.registerCowInterface(ethSwapCow.address);
     }
