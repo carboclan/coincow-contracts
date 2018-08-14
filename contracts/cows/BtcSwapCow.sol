@@ -33,11 +33,11 @@ contract BtcSwapCow is CowBase {
     }
 
     function name() public view returns (string) {
-        return "EthSwapCow";
+        return "BtcSwapCow";
     }
 
     function profitUnit() public view returns (string) {
-        return "ETH";
+        return "BTC";
     }
 
     function contractType() public view returns (string) {
@@ -45,7 +45,7 @@ contract BtcSwapCow is CowBase {
     }
 
     function contractUnit() public view returns (string) {
-        return "MH/s";
+        return "GH/s";
     }
 
     function milkThreshold() public view returns (uint256) {
