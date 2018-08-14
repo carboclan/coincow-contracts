@@ -3,7 +3,7 @@ pragma solidity  ^0.4.24;
 import "../CoinCowCore.sol";
 import "./CowBase.sol";
 
-contract EthSwapCow is CowBase {
+contract BtcSwapCow is CowBase {
     struct MiningParam {
         uint256 ts;
         uint256 difficulty;
