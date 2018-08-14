@@ -5,30 +5,27 @@ const UserInfo = artifacts.require('./UserInfo.sol');
 const CoinCowCore = artifacts.require('./CoinCowCore.sol');
 const AuctionHouse = artifacts.require('./AuctionHouse.sol');
 const Farm = artifacts.require('./Farm.sol');
-const TestCow = artifacts.require('./cows/TestCow.sol');
+const EthSwapCow = artifacts.require('./cows/EthSwapCow.sol');
+const BtcSwapCow = artifacts.require('./cows/BtcSwapCow.sol');
 
 contract('TestAll', async accounts => {
     let userInfo, coinCowCore, auctionHouse, farm;
-    let testBtcCow, testBchCow, testEthCow, testLamaCow;
+    let btcSwapCow, ethSwapCow;
 
     async function deploy() {
         userInfo = await UserInfo.new();
         coinCowCore = await CoinCowCore.new();
 
-        auctionHouse = await AuctionHouse.new(coinCowCore.address);
-        await coinCowCore.setAuctionHouse(auctionHouse.address);
-
         farm = await Farm.new(coinCowCore.address);
 
-        testBtcCow = await TestCow.new(coinCowCore.address, farm.address, 'Test BTC Cow', 'TH/s', 'POW', 'BTC');
-        testBchCow = await TestCow.new(coinCowCore.address, farm.address, 'Test BCH Cow', 'TH/s', 'POW', 'BCH');
-        testEthCow = await TestCow.new(coinCowCore.address, farm.address, 'Test ETH Cow', 'TH/s', 'POW', 'ETH');
-        testLamaCow = await TestCow.new(coinCowCore.address, farm.address, 'Test LAMA Cow', 'CCC', 'PLATFORM', 'ETH');
+        auctionHouse = await AuctionHouse.new(coinCowCore.address, farm.address);
+        await coinCowCore.setAuctionHouse(auctionHouse.address);
 
-        await coinCowCore.registerCowInterface(testBtcCow.address);
-        await coinCowCore.registerCowInterface(testBchCow.address);
-        await coinCowCore.registerCowInterface(testEthCow.address);
-        await coinCowCore.registerCowInterface(testLamaCow.address);
+        btcSwapCow = await BtcSwapCow.new(coinCowCore.address, farm.address);
+        ethSwapCow = await EthSwapCow.new(coinCowCore.address, farm.address);
+
+        await coinCowCore.registerCowInterface(btcSwapCow.address);
+        await coinCowCore.registerCowInterface(ethSwapCow.address);
     }
 
     describe('Initial state', function() {
@@ -47,7 +44,7 @@ contract('TestAll', async accounts => {
         before(deploy);
 
         it('should work as expected', async function () {
-            await testBtcCow.createCow();
+            await btcSwapCow.createCow(14000, 7 * 24 * 3600);
             const tokenId = await coinCowCore.totalSupply();
             assert.equal(tokenId, 1);
             assert.equal(await coinCowCore.ownerOf(tokenId), accounts[0]);

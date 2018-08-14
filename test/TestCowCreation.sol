@@ -13,7 +13,7 @@ contract EmptyCowInterface is CowInterface {
 
     address nonFungibleContract;
 
-    function EmptyCowInterface(address cowAddress) public {
+    constructor(address cowAddress) public {
         nonFungibleContract = cowAddress;
     }
 
