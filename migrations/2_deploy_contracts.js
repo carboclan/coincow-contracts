@@ -27,6 +27,9 @@ module.exports = async function(deployer) {
     await deployer.deploy(BtcSwapCow, coinCowCore.address, farm.address);
     const btcSwapCow = await BtcSwapCow.deployed();
 
+    await ethSwapCow.setData(283675708561669, 14592636);
+    await btcSwapCow.setData(6389316883511, 12.5 * 1e18);
+
     await coinCowCore.registerCowInterface(ethSwapCow.address);
     await coinCowCore.registerCowInterface(btcSwapCow.address);
 
