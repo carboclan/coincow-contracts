@@ -93,12 +93,16 @@ contract CoinCowAccessControl {
     }
 
     mapping(address => bool) public isUnderwriter;
+    event UnderwriterSet(address underwriter, bool flag);
+
     function setUnderwriter(address underwriter, bool flag) public onlyCOO {
         if (flag) {
             isUnderwriter[underwriter] = true;
         } else {
             delete isUnderwriter[underwriter];
         }
+
+        emit UnderwriterSet(underwriter, flag);
     }
 
     modifier onlyUnderwriter {
