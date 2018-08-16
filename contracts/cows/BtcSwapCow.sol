@@ -49,15 +49,15 @@ contract BtcSwapCow is CowBase {
     }
 
     function milkThreshold() public view returns (uint256) {
-        return 5 ether;
+        return 0.02 ether;
     }
 
     function spillThreshold() public view returns (uint256) {
-        return 10 ether;
+        return 0.05 ether;
     }
 
     function stealThreshold() public view returns (uint256) {
-        return 15 ether;
+        return 0.1 ether;
     }
 
     function withdrawThreshold() public view returns (uint256) {
