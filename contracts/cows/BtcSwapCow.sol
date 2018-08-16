@@ -87,7 +87,7 @@ contract BtcSwapCow is CowBase {
         }
     }
 
-    function createCow(uint256 hashPower, uint256 duration) public onlyCOO {
+    function createCow(uint256 hashPower, uint256 duration) public onlyUnderwriter {
         Cow memory cow = Cow(
             true,
             hashPower,

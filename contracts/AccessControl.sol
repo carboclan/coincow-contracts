@@ -40,6 +40,11 @@ contract AccessControl {
         _;
     }
 
+    modifier onlyUnderwriter {
+        require(nonFungibleContract.isUnderwriter(msg.sender));
+        _;
+    }
+
     /// @dev Modifier to allow actions only when the nonFungibleContract IS NOT paused
     modifier whenNotPaused() {
         require(!nonFungibleContract.paused());

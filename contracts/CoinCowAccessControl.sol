@@ -91,4 +91,18 @@ contract CoinCowAccessControl {
         // can't unpause if contract was upgraded
         paused = false;
     }
+
+    mapping(address => bool) public isUnderwriter;
+    function setUnderwriter(address underwriter, bool flag) public onlyCOO {
+        if (flag) {
+            isUnderwriter[underwriter] = true;
+        } else {
+            delete isUnderwriter[underwriter];
+        }
+    }
+
+    modifier onlyUnderwriter {
+        require(isUnderwriter[msg.sender]);
+        _;
+    }
 }
