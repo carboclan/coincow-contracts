@@ -1,5 +1,7 @@
-const PrivateKeyProvider = require('truffle-privatekey-provider');
-const provider = process.env.PRI && new PrivateKeyProvider(process.env.PRI, process.env.URL || 'https://ropsten.infura.io/8Q30zi3TAqlJ6JSCwcul');
+function getPrivateKeyProvider() {
+    const PrivateKeyProvider = require('truffle-privatekey-provider');
+    return new PrivateKeyProvider(process.env.PRI, process.env.URL || 'https://ropsten.infura.io/8Q30zi3TAqlJ6JSCwcul');
+}
 
 module.exports = {
     networks: {
@@ -11,7 +13,7 @@ module.exports = {
             gasPrice: 10000000000 // 10 gwei
         },
         production: {
-            provider,
+            provider: process.env.PRI && getPrivateKeyProvider(),
             network_id: '*',
             gas: 4500000, // Gas limit used for deploys
             gasPrice: 10000000000 // 10 gwei
