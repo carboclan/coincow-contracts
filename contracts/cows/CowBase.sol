@@ -79,7 +79,7 @@ contract CowBase is CowInterface, AccessControl {
         uint256 stolen = available - spillThreshold();
         balanceOf[msg.sender] += stolen;
         cow.totalStolen += stolen;
-        cow.lastStolen = stolen;
+        cow.lastStolen += stolen;
 
         emit Stolen(msg.sender, _tokenId, stolen);
     }
